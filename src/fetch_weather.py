@@ -1,42 +1,33 @@
-# src/fetch_weather.py
 
-import json
-from datetime import datetime, timezone
-from pathlib import Path
-import requests
+from .config import (
+    OPEN_WEATHER_API_KEY,
+    DEFAULT_CITY,
+    WEATHER_DIR,
+)
+from .http_client import get_json
+from .utils import save_json
 
-from config import WEATHER_DIR
 
-def fetch_current_weather(lat=14.5995, lon=120.9842):
-    url = (
-        "https://api.open-meteo.com/v1/forecast"
-        f"?latitude={lat}&longitude={lon}&current_weather=true"
-    )
+def fetch_current_weather(city: str) -> dict:
+    if not OPEN_WEATHER_API_KEY:
+        raise ValueError("OPEN_WEATHER_API_KEY is missing. Put it in .env")
 
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    url = "https://api.openweathermap.org/data/2.5/weather"
+    params = {"q": city, "appid": OPEN_WEATHER_API_KEY, "units": "metric"}
+    return get_json(url, params=params)
 
-def save_weather_json(data):
-    WEATHER_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    filename = f"weather_{timestamp}.json"
-    filepath = WEATHER_DIR / filename
-
-    with filepath.open("w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-
-    return str(filepath)
 
 def main():
-    try:
-        data = fetch_current_weather()
-    except Exception as e:
-        print(f"Error fetching weather: {e}")
-        return
+    city = DEFAULT_CITY
+    print(f"[weather] fetching city={city}")
 
-    saved_path = save_weather_json(data)
-    print(f"Saved weather data to {saved_path}")
+    try:
+        payload = fetch_current_weather(city)
+        saved_path = save_json(WEATHER_DIR, prefix="weather", payload=payload, suffix=city)
+        print(f"[weather] saved -> {saved_path}")
+    except Exception as e:
+        print(f"[weather] failed: {e}")
+
 
 if __name__ == "__main__":
     main()
