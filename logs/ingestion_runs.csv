@@ -1,0 +1,5 @@
+ts_utc,source,status,records,output_file,message
+2026-01-18T15:44:26+00:00,weather,success,1,C:\Users\barba\Desktop\CITY PULSE\citypulse-data-ingestion\data\raw\weather\weather_manila_20260118T154426Z.json,city=Manila
+2026-01-18T15:44:29+00:00,news,success,25,C:\Users\barba\Desktop\CITY PULSE\citypulse-data-ingestion\data\raw\news\news_manila_20260118T154429Z.json,query=Manila timespan=1d
+2026-01-18T16:02:29+00:00,weather,success,1,C:\Users\barba\Desktop\CITY PULSE\citypulse-data-ingestion\data\raw\weather\weather_manila_20260118T160229Z.json,city=Manila
+2026-01-18T16:02:36+00:00,news,success,25,C:\Users\barba\Desktop\CITY PULSE\citypulse-data-ingestion\data\raw\news\news_manila_20260118T160236Z.json,query=Manila timespan=1d
